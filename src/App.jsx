@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import ColorfulMessage from "./components/ColorhfulMessage";
 
 // コンポーネント化
@@ -7,7 +7,33 @@ import ColorfulMessage from "./components/ColorhfulMessage";
 // reactのコンポーネントと示すためにjsxとした方が良い
 // コンポーネントの命名は最初大文字、-_を使わない
 const App = () => {
-  const onClickButton = () => alert();
+  console.log("saisho");
+  /**state
+   * 条件によって動的変わる部分をstateとして定義する
+   * useState()から分割代入で2つを取り出す
+   * 1つ目がstateとして使用する変数名
+   * 2つ目は1つ目の変数を変更するための関数
+   * useStateの()は初期値を設定できる
+   * コンポーネント内でstateは上に書いておくとわかりやすくてよい！
+   * stateは再読み込みをせずに画面に変化が出る
+   * →リアクトのコンポーネントが再レンダリングされているため
+   */
+  /**
+   * 再レンダリングのタイミング
+   * stateを変更した場合
+   * propsを受け取っていて、propsの中身が変わった場合
+   * 親のコンポーネントのstateが変更(再レンダリング)された場合
+   * 再レンダリングの最適化も必要になってくる
+   */
+  const [num, setNum] = useState(0);
+  const [faceShowFlag, setFaceShowFlag] = useState(true);
+
+  const onClickCountUp = () => {
+    setNum(num + 1);
+  };
+  const onClickSwitchShowFlag = () => {
+    setFaceShowFlag(!faceShowFlag);
+  };
 
   // JSX技法
   // JavaScriptの中でHTMLを書くことを指す
@@ -34,7 +60,10 @@ const App = () => {
       {/* <ColorfulMessage color="red" message="hey!!" /> */}
       <ColorfulMessage color="red"> hey!! </ColorfulMessage>
       {/* イベントの割り当て */}
-      <button onClick={onClickButton}>BUTTON</button>
+      <button onClick={onClickCountUp}>Count Up!!</button>
+      <p>{num}</p>
+      <button onClick={onClickSwitchShowFlag}>on/off!</button>
+      {faceShowFlag && <p>(・_・)</p>}
       {/* タグの中で扱うイベントやスタイルの名称が全てキャメルケース 
       {}はjavascriptとして認識  */}
     </>

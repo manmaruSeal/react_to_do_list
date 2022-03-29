@@ -3,6 +3,10 @@ import React from "react";
 const ColorfulMessage = (props) => {
   // console.log(props);
   // props.引数と書くのは煩雑なため、分割代入を用いる
+
+  /**
+   * タグと閉じタグの間の文字を取得するにはchildrenという要素(変数)を使う
+   */
   const { color, children } = props;
   const contentStyle = {
     // 文字列かつキャメルケース！
