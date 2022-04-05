@@ -1,6 +1,6 @@
 import React from "react";
 
-const ColorfulMessage = (props) => {
+export const ColorfulMessage = (props) => {
   // console.log(props);
   // props.引数と書くのは煩雑なため、分割代入を用いる
 
@@ -21,4 +21,5 @@ const ColorfulMessage = (props) => {
   return <p style={contentStyle}>{children}</p>;
 };
 
-export default ColorfulMessage;
+// export default ColorfulMessage;
+// default export は1つのファイルで1つしかできない
