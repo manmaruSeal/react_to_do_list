@@ -1,13 +1,17 @@
-import React, { useState } from "react";
-import ColorfulMessage from "./components/ColorhfulMessage";
+import React, { useEffect, useState } from "react";
+// import ColorfulMessage from "./components/ColorhfulMessage";
+// ↑好きな名前を付けれる　↓import元になければエラーとなる
+import { ColorfulMessage } from "./components/ColorhfulMessage";
 
+/* eslint react-hooks/exhaustive-deps: off*/
+// ↑注意をしないようにする
 // コンポーネント化
 // reactは関数を使って画面の要素であるコンポーネントを表現していける
 // reactはファイル形式がjsでも動くが
 // reactのコンポーネントと示すためにjsxとした方が良い
 // コンポーネントの命名は最初大文字、-_を使わない
 const App = () => {
-  console.log("saisho");
+  // console.log("saisho");
   /**state
    * 条件によって動的変わる部分をstateとして定義する
    * useState()から分割代入で2つを取り出す
@@ -19,7 +23,7 @@ const App = () => {
    * →リアクトのコンポーネントが再レンダリングされているため
    */
   /**
-   * 再レンダリングのタイミング
+   * コンポーネントの再レンダリングのタイミング
    * stateを変更した場合
    * propsを受け取っていて、propsの中身が変わった場合
    * 親のコンポーネントのstateが変更(再レンダリング)された場合
@@ -34,6 +38,43 @@ const App = () => {
   const onClickSwitchShowFlag = () => {
     setFaceShowFlag(!faceShowFlag);
   };
+
+  /** 再レンダリングの注意点
+   * 例としてcounterが3の倍数のときにだけ顔文字を出すようにする
+   * Too many re-renders.というエラーが出る
+   * numの初期値が0でif (num % 3 === 0)の中に入り
+   * setFaceShowFlagでstateの変更があると再レンダリングされて
+   * また上から実行されsetFaceShowFlagでまた再レンダリングという
+   * ループに陥ってしまう…！！！
+   */
+  /**
+   * useEffectの第2引数に配列を取る
+   * []の場合は最初の1回のみ実行される
+   * データ取りに行くときとかに使う
+   * (stateが変わる度に取りに行っていたらパフォーマンス↓)
+   * []の中の変数が注意されることがある
+   * useEffet内で使用している変数が他にもあるけど良いか？の注意
+   * 今回はnumのみ関心を持ちたい
+   */
+  useEffect(() => {
+    if (num % 3 === 0) {
+      // すでにtrueの場合はstateの変更をしない(Falseの場合は変更)
+      faceShowFlag || setFaceShowFlag(true);
+    } else {
+      // すでにfalseの場合はstateの変更をしない(trueの場合は変更)
+      faceShowFlag && setFaceShowFlag(false);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [num]);
+
+  /**
+   * 上記のようにすればエラーは消えるが、on/offボタンが聞かなくなる
+   * ボタンを押下することでonClickSwitchShowFlagが動き
+   * stateが変更される→上から再レンダリング
+   * numは変わらないからボタンでT/Fを変えても
+   * if (num % 3 === 0)で元に戻ってしまって動いてないように見える
+   * ⇒useeffectを使う！！(関心の分離？)
+   */
 
   // JSX技法
   // JavaScriptの中でHTMLを書くことを指す
